@@ -1,0 +1,50 @@
+{
+  "name": "nodebb-theme-thesis-custom",
+  "version": "0.0.1",
+  "nbbpm": {
+    "compatibility": "^1.14.0"
+  },
+  "description": "Custom theme for thesis",
+  "main": "theme.less",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psychobunny/nodebb-theme-persona"
+  },
+  "keywords": [
+    "nodebb",
+    "theme",
+    "forum",
+    "bootstrap",
+    "responsive"
+  ],
+  "contributors": [
+    {
+      "name": "Andrew Rodrigues",
+      "email": "andrew@designcreateplay.com",
+      "url": "https://github.com/psychobunny"
+    },
+    {
+      "name": "Julian Lam",
+      "email": "julian@designcreateplay.com",
+      "url": "https://github.com/julianlam"
+    },
+    {
+      "name": "Barış Soner Uşaklı",
+      "email": "baris@designcreateplay.com",
+      "url": "https://github.com/barisusakli"
+    },
+    {
+      "name": "Lâm Cương Đạt",
+      "email": "lam.cuong.dat@gmail.com",
+      "url": "https://github.com/lamcuongdat"
+    }
+  ],
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/psychobunny/nodebb-theme-persona/issues"
+  },
+  "dependencies": {
+    "pulling": "^2.0.0",
+    "striptags": "^3.1.1"
+  }
+}

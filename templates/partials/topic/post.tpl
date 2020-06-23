@@ -53,7 +53,7 @@
 	<div component="post/signature" data-uid="{posts.user.uid}" class="post-signature">{posts.user.signature}</div>
 	<!-- ENDIF posts.user.signature -->
 
-	<small class="pull-right">
+	<small class="pull-right" style="display: flex; justify-content: center">
 		<span class="post-tools">
 			<a component="post/reply" href="#" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->">[[topic:reply]]</a>
 			<a component="post/quote" href="#" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->">[[topic:quote]]</a>
@@ -74,8 +74,8 @@
 			<!-- ENDIF !downvote:disabled -->
 		</span>
 		<!-- ENDIF !reputation:disabled -->
-
 		<!-- IMPORT partials/topic/post-menu.tpl -->
+		<!-- IMPORT partials/thread_tools.tpl -->
 	</small>
 
 	<!-- IF !hideReplies -->

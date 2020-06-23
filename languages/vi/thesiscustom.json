@@ -1,0 +1,19 @@
+{
+  "price":"Giá",
+  "currency":"Đơn vị tiền tệ",
+  "brand":"Thương hiệu",
+  "discount-percentage":"Mức giảm giá (%)",
+  "discount-money":"Giá đã giảm",
+  "max-discount-money":"Số tiền giảm tối đa",
+  "amount":"Số lượng",
+  "min-order":"Số sản phẩm cần đặt tối thiểu",
+  "deal-url":"Đường dẫn",
+  "expired-date":"Hết hạn ngày",
+  "expired-time":"Vào lúc",
+  "sku":"SKU-Mã hàng hóa",
+  "coupon":"Mã giảm giá",
+  "price-placeholder":"0.00",
+
+  "visit-now":"Xem ngay!",
+  "end-at":"Kết thúc vào"
+}

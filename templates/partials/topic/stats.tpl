@@ -1,8 +1,13 @@
-<div class="stats hidden-xs">
-	<span component="topic/post-count" class="human-readable-number" title="{postcount}">{postcount}</span><br />
-	<small>[[global:posts]]</small>
-</div>
-<div class="stats hidden-xs">
-	<span class="human-readable-number" title="{viewcount}">{viewcount}</span><br />
-	<small>[[global:views]]</small>
+<div class="col-xs-12" id="stat-container">
+    <span>
+        <i class="fa fa-comment-o"></i>
+        <span component="topic/post-count" class="human-readable-number"
+              title="{postcount}">{postcount}
+        </span>
+    </span>
+    <span class="vr"></span>
+    <span>
+        <i class="fa fa-eye"></i>
+        <span class="human-readable-number" title="{viewcount}">{viewcount}</span>
+    </span>
 </div>

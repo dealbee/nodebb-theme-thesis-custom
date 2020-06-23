@@ -7,13 +7,25 @@
 		{ "hook": "filter:config.get", "method": "getThemeConfig" },
 		{ "hook": "static:app.load", "method": "init" },
 		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
-		{ "hook": "filter:topic.build", "method": "addUserToTopic" }
+		{ "hook": "filter:topic.build", "method": "addUserToTopic" },
+		{ "hook": "filter:topic.build", "method": "addOptionalDataToTopic" }
+	],
+	"less":[
+		"less/modules/topic_custom.less",
+		"less/modules/slick-theme.less",
+		"less/modules/slick.less",
+		"less/modules/lightslider.less",
+		"less/modules/deleteImageButton.less"
 	],
 	"scripts": [
 		"lib/persona.js",
+		"lib/imageSlideshow.js",
+		"lib/topic_custom.js",
 		"lib/modules/nprogress.js",
 		"lib/modules/autohidingnavbar.min.js",
-		"lib/modules/quickreply.js"
+		"lib/modules/quickreply.js",
+		"lib/modules/lightslider.js",
+		"lib/modules/deleteImageButton.js"
 	],
 	"modules": {
 		"pulling.js": "node_modules/pulling/build/pulling-drawer.js"

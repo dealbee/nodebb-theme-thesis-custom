@@ -1,0 +1,19 @@
+{
+  "price":"Price",
+  "currency":"Currency",
+  "brand":"Brand",
+  "discount-percentage":"Discount percentage (%)",
+  "discount-money":"Discount price",
+  "max-discount-money":"Max discount money",
+  "amount":"Amount",
+  "min-order":"Minimum order",
+  "deal-url":"Link",
+  "expired-date":"Expired at",
+  "expired-time":"At",
+  "sku":"SKU",
+  "coupon":"Coupon",
+  "price-placeholder":"0.00",
+
+  "visit-now":"Visit now!",
+  "end-at":"Expired at"
+}

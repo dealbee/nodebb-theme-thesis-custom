@@ -12,8 +12,6 @@
 	],
 	"less":[
 		"less/modules/topic_custom.less",
-		"less/modules/slick-theme.less",
-		"less/modules/slick.less",
 		"less/modules/lightslider.less",
 		"less/modules/deleteImageButton.less"
 	],
@@ -24,11 +22,11 @@
 		"lib/modules/nprogress.js",
 		"lib/modules/autohidingnavbar.min.js",
 		"lib/modules/quickreply.js",
-		"lib/modules/lightslider.js",
 		"lib/modules/deleteImageButton.js"
 	],
 	"modules": {
-		"pulling.js": "node_modules/pulling/build/pulling-drawer.js"
+		"pulling.js": "node_modules/pulling/build/pulling-drawer.js",
+		"lightslider.js": "lib/modules/lightslider.js"
 	},
 	"acpScripts": [
 		"lib/admin.js"

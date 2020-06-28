@@ -9,7 +9,16 @@
             <i class="pull-left fa fa-arrow-circle-right <!-- IF !oldCid -->hidden<!-- ENDIF !oldCid -->"
                title="[[topic:moved]]"></i>
             {{{each icons}}}@value{{{end}}}
-            <span class="topic-title" component="topic/title">{title}</span>
+            <span class="topic-title" component="topic/title">
+                <!-- IF privileges.topics:pindealbee -->
+                <span id="pinDealbeeButton">
+                    <button id="buttonPin" class="btn btn-success">
+                        <i class="fa fa-2x fa-thumb-tack"></i>
+                    </button>
+                </span>
+                <!-- ENDIF privileges.topics:pindealbee -->
+                {title}
+            </span>
         </h1>
     </div>
     <!-- IF optionalData.discountPrice -->
@@ -21,7 +30,6 @@
     <div class="col-xs-12 col-md-4" id="#optional-data">
         <!-- IF optionalData.images.length -->
         <!-- IF mainPost.display_edit_tools -->
-        <!-- IMPORT partials/topic/deleteImageButton.tpl -->
         <!-- ENDIF mainPost.display_edit_tools -->
 
         <!-- IMPORT partials/topic/imageSlideshow.tpl -->
@@ -130,8 +138,14 @@
             <hr class="visible-xs"/>
 
             <ul component="topic" class="posts" data-tid="{tid}" data-cid="{cid}">
-                {{{each posts}}}
-                <li component="post" class="<!-- IF posts.deleted -->deleted<!-- ENDIF posts.deleted -->"
+                 <!-- BEGIN posts -->
+                <li component="post" class="<!-- IF posts.deleted -->
+                                            deleted
+                                            <!-- ENDIF posts.deleted -->
+
+                                            <!-- IF !@first -->
+                                            topic-comment
+                                            <!-- ENDIF !@first -->"
                 <!-- IMPORT partials/data/topic.tpl -->>
                 <a component="post/anchor" data-index="{posts.index}" id="{posts.index}"></a>
 
@@ -143,7 +157,7 @@
                 <div class="post-bar-placeholder"></div>
                 <!-- ENDIF !posts.index -->
                 </li>
-                {{{end}}}
+                <!-- END posts -->
             </ul>
 
             <!-- IF config.enableQuickReply -->

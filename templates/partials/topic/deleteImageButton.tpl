@@ -23,9 +23,6 @@
                     {{{end}}}
                 </div>
             </div>
-            <div class="modal-footer">
-                <buttn class="btn btn-danger" disabled=true id="deleteImagesBtn"><i class="fa fa-trash"></i></buttn>
-            </div>
         </div>
     </div>
 </div>

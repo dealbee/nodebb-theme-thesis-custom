@@ -4,6 +4,7 @@ var striptags = require('striptags');
 var meta = require.main.require('./src/meta');
 var user = require.main.require('./src/user');
 var db = require.main.require('./src/database');
+var groups = require.main.require('./src/groups');
 var async = module.parent.require('async');
 var moment = require('./lib/modules/moment')
 var library = {};
@@ -133,6 +134,8 @@ library.addOptionalDataToTopic = function (data, callback) {
             library.formatOptionalData(optionalData);
             data.templateData.optionalData = optionalData;
             data.templateData.mainPost = data.templateData.posts[0]
+            let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
+            data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
             next(null, null)
         }
     ], function (err, res) {
@@ -186,6 +189,34 @@ library.getAllImagePath = function (content) {
         return {index: i, path: e}
     })
     return paths2
+}
+library.canPinCids = async function (uid) {
+    //Get groups data that have privilige to pin to dealbee
+    var groupsData = await db.client.collection('objects').find({_key: /privileges:groups:pindealbee:event:pin:members/}).toArray();
+    //Get users data that have privilige to pin to dealbee
+    var users = await db.client.collection('objects').find({_key: /privileges:pindealbee:event:pin:members/}).toArray();
+    //Get groups' name
+    var groupNames = [];
+    groupsData.forEach(e => groupNames.push(e.value));
+    //Get array of boolean determining user is in group
+    var usersInGroup = await groups.isMemberOfGroups(uid, groupNames)
+    var privilegeId = [];
+    groupsData.forEach((e, i) => {
+        if (usersInGroup[i] == true) {
+            privilegeId.push(e._key);
+        }
+    })
+    users.forEach(e => {
+        if (e.value == uid.toString()) {
+            privilegeId.push(e._key);
+        }
+    })
+    var cids = privilegeId.map(e => e = e.split(":")[2]);
+    cids = [...new Set(cids)];
+    cids = cids.map(e => {
+        return e = parseInt(e);
+    })
+    return cids;
 }
 module.exports = library;
 

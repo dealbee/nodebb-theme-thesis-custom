@@ -15,5 +15,9 @@
   "price-placeholder":"0.00",
 
   "visit-now":"Visit now!",
-  "end-at":"Expired at"
+  "end-at":"Expired at",
+
+  "add-images": "Add images",
+  "upload-image": "Upload an image",
+  "pass-url": "or pass an image URL"
 }

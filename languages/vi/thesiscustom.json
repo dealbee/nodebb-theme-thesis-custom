@@ -15,5 +15,8 @@
   "price-placeholder":"0.00",
 
   "visit-now":"Xem ngay!",
-  "end-at":"Kết thúc vào"
+  "end-at":"Kết thúc vào",
+  "add-images": "Thêm ảnh",
+  "upload-image": "Tải ảnh lên",
+  "pass-url": "hoặc dán một đường dẫn đến ảnh"
 }

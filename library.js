@@ -139,7 +139,7 @@ library.addOptionalDataToTopic = function (data, callback) {
             next(null, null)
         }
     ], function (err, res) {
-        console.log(data.templateData);
+        // console.log(data.templateData);
         callback(null, data);
     });
 }

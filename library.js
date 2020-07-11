@@ -1,13 +1,18 @@
 'use strict';
 
-var striptags = require('striptags');
-var meta = require.main.require('./src/meta');
-var user = require.main.require('./src/user');
-var db = require.main.require('./src/database');
-var groups = require.main.require('./src/groups');
-var async = module.parent.require('async');
-var moment = require('./lib/modules/moment')
-var library = {};
+const striptags = require('striptags');
+const meta = require.main.require('./src/meta');
+const user = require.main.require('./src/user');
+const db = require.main.require('./src/database');
+const groups = require.main.require('./src/groups');
+const async = module.parent.require('async');
+const moment = require('./lib/modules/moment')
+const modulesSockets = module.parent.require('./socket.io/modules');
+const socketIndex = module.parent.require('./socket.io/index');
+const privileges = require.main.require('./src/privileges');
+const topics = require.main.require('./src/topics');
+const notifications = require.main.require('./src/notifications');
+let library = {};
 
 library.init = function (params, callback) {
     var app = params.router;
@@ -15,7 +20,26 @@ library.init = function (params, callback) {
 
     app.get('/admin/plugins/thesis-custom', middleware.admin.buildHeader, renderAdmin);
     app.get('/api/admin/plugins/thesis-custom', renderAdmin);
-
+    modulesSockets.submitNote = function (socket, data, callback) {
+        let topic = null;
+        let error = null;
+        async.waterfall([
+            async function (callback) {
+                topic = await db.client.collection('objects').find({_key: `topic:${data.tid}`}).toArray();
+                topic = topic[0];
+                topic.note = data.content;
+                try {
+                    db.client.collection('objects').save(topic);
+                    socketIndex.server.sockets.emit('note-edit', data);
+                } catch (e) {
+                    error = e;
+                    topic = null;
+                }
+            }
+        ], function (err, res) {
+            callback(error, topic);
+        });
+    }
     callback();
 };
 
@@ -133,15 +157,126 @@ library.addOptionalDataToTopic = function (data, callback) {
             data.templateData.postcount = data.templateData.postcount - 1;
             library.formatOptionalData(optionalData);
             data.templateData.optionalData = optionalData;
+            if (data.templateData.privileges.read == true && data.templateData.privileges.editable == false && data.templateData.locked == 1) {
+                data.templateData.privileges.editable = true;
+                data.templateData.posts[0].display_moderator_tools = true;
+                data.templateData.posts[0].display_post_menu = 1;
+                data.templateData.posts[0].display_edit_tools = true;
+            }
+            if (!data.templateData.locked && !data.templateData.privileges.editable) {
+                data.templateData.posts[0].display_moderator_tools = false;
+                data.templateData.posts[0].display_edit_tools = false;
+            }
+            data.templateData.posts.forEach(post => {
+                if (post.pid == data.templateData.mainPid) {
+                    post.isMain = true;
+                }
+            })
+            data.templateData.privileges.edit_note = await library.canTakeNote(data.templateData.loggedInUser.uid, data.templateData.cid);
             data.templateData.mainPost = data.templateData.posts[0]
             let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
             data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
             next(null, null)
         }
     ], function (err, res) {
-        // console.log(data.templateData);
+        console.log(data.templateData);
         callback(null, data);
     });
+}
+// library.unreadBuild = function (data, callback) {
+//     console.log(data.templateData.topics)
+//     data.templateData.topics = data.templateData.topics.filter(topic => topic.locked == 1)
+//     data.templateData.topicCount = data.templateData.topics.length;
+//     callback(null, data);
+// }
+library.getUnreadTids = function (data, callback) {
+    let filterLocked = async function (tids) {
+        let tidsFull = await topics.getTopicsByTids(data.tids);
+        return tidsFull
+            .filter(tid => {
+                if (tid.locked == 1) {
+                    return tid
+                }
+            })
+            .map(e => e.tid)
+    }
+    async.waterfall([
+        async function (next) {
+            for (let i in data.tidsByFilter) {
+                data.tidsByFilter[i] = await filterLocked(data.tidsByFilter[i]);
+                data.counts[i] = data.tidsByFilter[i].length
+            }
+            data.tids = await filterLocked(data.tids);
+        }], function (err, res) {
+        callback(null, data);
+    });
+}
+library.topicCreate = function (data, callback) {
+    data.topic.locked = 1;
+    callback(null, data);
+}
+library.categoryBuild = function (data, callback) {
+    data.templateData.topics = data.templateData.topics.filter(topic => {
+        return topic.locked !== 1 || data.templateData.privileges.isAdminOrMod || data.templateData.privileges.uid === topic.user.uid
+    })
+    console.log(data.templateData.topics);
+    callback(null, data);
+}
+library.userBuild = function (data, callback) {
+    let asyncForEach = async function (array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    }
+    let posts = data.templateData.posts;
+    let bestPosts = data.templateData.bestPosts;
+    async.waterfall([
+        async function (next) {
+            await asyncForEach(posts, async post => {
+                post.topic.locked = await topics.isLocked(post.topic.tid)
+            })
+            await asyncForEach(bestPosts, async post => {
+                post.topic.locked = await topics.isLocked(post.topic.tid)
+            })
+        }], function (err, res) {
+        data.templateData.posts = posts
+    });
+    callback(null, data);
+}
+library.topicLock = function (data) {
+    if (data.topic.uid !== data.uid) {
+        let topic = null;
+        let userInfo = null;
+        async.waterfall([
+            async function (next) {
+                topic = await topics.getTopicsData([data.topic.tid])
+                topic = topic[0]
+                userInfo = await user.getUsers([data.uid], 1)
+                userInfo = userInfo[0]
+            }], function (err, res) {
+            console.log(topic)
+            console.log(userInfo);
+            let bodyShort = null;
+            let nid = null;
+            if (data.topic.isLocked) {
+                bodyShort = `[[thesiscustom:lock-your-topic,${userInfo.username},${topic.title}]]`
+                nid = 'lock:tid:' + data.topic.tid + ':uid:' + data.uid
+            } else {
+                bodyShort = `[[thesiscustom:unlock-your-topic,${userInfo.username},${topic.title}]]`
+                nid = 'unlock:tid:' + data.topic.tid + ':uid:' + data.uid
+            }
+            notifications.create({
+                bodyShort,
+                path: '/topic/' + data.topic.tid,
+                nid,
+                tid: data.topic.tid,
+                from: data.uid,
+            }, (err, notification) => {
+                notifications.push(notification, [data.topic.uid], () => {
+                });
+            });
+        });
+    }
 }
 library.hasAllAttributes = function (optionalData, props) {
     let flag = false;
@@ -217,6 +352,42 @@ library.canPinCids = async function (uid) {
         return e = parseInt(e);
     })
     return cids;
+}
+library.canTakeNoteCids = async function (uid) {
+    //Get groups data that have privilige to pin to dealbee
+    let groupsData = await db.client.collection('objects').find({_key: /privileges:groups:editor:event:canTakeNote:members/}).toArray();
+    //Get users data that have privilige to pin to dealbee
+    let users = await db.client.collection('objects').find({_key: /privileges:editor:event:canTakeNote:members/}).toArray();
+    //Get groups' name
+    let groupNames = [];
+    groupsData.forEach(e => groupNames.push(e.value));
+    //Get array of boolean determining user is in group
+    let usersInGroup = await groups.isMemberOfGroups(uid, groupNames)
+    let privilegeId = [];
+    groupsData.forEach((e, i) => {
+        if (usersInGroup[i] == true) {
+            privilegeId.push(e._key);
+        }
+    })
+    users.forEach(e => {
+        if (e.value == uid.toString()) {
+            privilegeId.push(e._key);
+        }
+    })
+    var cids = privilegeId.map(e => e = e.split(":")[2]);
+    cids = [...new Set(cids)];
+    return cids;
+}
+library.canTakeNote = async function (uid, cid) {
+    let isAdmin = await privileges.users.isAdministrator(uid);
+    let isGlobalMod = await privileges.users.isGlobalModerator(uid);
+    let isMod = await privileges.users.isModerator(uid, cid);
+    if (isAdmin || isGlobalMod || isMod) {
+        return true
+    }
+    let cids = await this.canTakeNoteCids(uid);
+    let result = new Set(cids).has(cid.toString());
+    return result;
 }
 module.exports = library;
 

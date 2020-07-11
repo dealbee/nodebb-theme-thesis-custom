@@ -1,4 +1,5 @@
-<li component="post" class="posts-list-item row<!-- IF ../deleted --> deleted<!-- ELSE --><!-- IF ../topic.deleted --> deleted<!-- ENDIF --><!-- ENDIF -->" data-pid="{../pid}" data-uid="{../uid}">
+<li component="post" class="posts-list-item row<!-- IF ../deleted --> deleted<!-- ELSE --><!-- IF ../topic.deleted --> deleted<!-- ENDIF --><!-- ENDIF -->
+<!-- IF latestPosts.topic.locked --> locked <!-- ENDIF latestPosts.topic.locked -->" data-pid="{../pid}" data-uid="{../uid}">
     <div class="col-lg-11 col-sm-10 col-xs-9 post-body">
         <a class="topic-title" href="{config.relative_path}/post/{../pid}">
             <!-- IF !../isMainPost -->RE: <!-- ENDIF -->{../topic.title}

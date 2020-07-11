@@ -18,5 +18,9 @@
   "end-at":"Kết thúc vào",
   "add-images": "Thêm ảnh",
   "upload-image": "Tải ảnh lên",
-  "pass-url": "hoặc dán một đường dẫn đến ảnh"
+  "pass-url": "hoặc dán một đường dẫn đến ảnh",
+  "lock-your-topic": "<strong>%1</strong> vừa bỏ duyệt chủ đề: <strong>%2</strong> của bạn",
+  "unlock-your-topic": "<strong>%1</strong> vừa duyệt chủ đề: <strong>%2</strong> của bạn",
+  "no_unread_topics": "Không có bài viết chờ xét duyệt",
+  "approve": "Chờ duyệt"
 }

@@ -119,7 +119,6 @@
         </ul>
     </div>
     <div class="col-xs-12 col-md-8">
-        <!-- IMPORT partials/topic/stats.tpl -->
         <div class="topic <!-- IF widgets.sidebar.length -->col-lg-9 col-sm-12<!-- ELSE -->col-lg-12<!-- ENDIF widgets.sidebar.length -->">
             <!-- IF merger -->
             <div component="topic/merged/message" class="alert alert-warning clearfix">

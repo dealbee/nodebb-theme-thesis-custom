@@ -18,5 +18,9 @@
   "end-at":"Expired at",
   "add-images": "Add images",
   "upload-image": "Upload an image",
-  "pass-url": "or pass an image URL"
+  "pass-url": "or pass an image URL",
+  "lock-your-topic": "<strong>%1</strong> approved topic your topic: <strong>%2</strong>",
+  "unlock-your-topic": "<strong>%1</strong> disapproved your topic: <strong>%2</strong>",
+  "no_unread_topics": "No post to approve",
+  "approve": "Not approved posts"
 }

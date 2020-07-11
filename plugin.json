@@ -8,12 +8,18 @@
 		{ "hook": "static:app.load", "method": "init" },
 		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
 		{ "hook": "filter:topic.build", "method": "addUserToTopic" },
-		{ "hook": "filter:topic.build", "method": "addOptionalDataToTopic" }
+		{ "hook": "filter:topic.build", "method": "addOptionalDataToTopic" },
+		{ "hook": "filter:topic.create", "method": "topicCreate" },
+		{ "hook": "filter:topics.getUnreadTids", "method": "getUnreadTids" },
+		{ "hook": "filter:category.build", "method": "categoryBuild" },
+		{ "hook": "filter:account/profile.build", "method": "userBuild" },
+		{ "hook": "action:topic.lock", "method": "topicLock" }
 	],
 	"less":[
 		"less/modules/topic_custom.less",
 		"less/modules/lightslider.less",
-		"less/modules/deleteImageButton.less"
+		"less/modules/deleteImageButton.less",
+		"less/topic-note.less"
 	],
 	"scripts": [
 		"lib/persona.js",
@@ -22,7 +28,8 @@
 		"lib/modules/nprogress.js",
 		"lib/modules/autohidingnavbar.min.js",
 		"lib/modules/quickreply.js",
-		"lib/modules/deleteImageButton.js"
+		"lib/modules/deleteImageButton.js",
+		"lib/note_add.js"
 	],
 	"modules": {
 		"pulling.js": "node_modules/pulling/build/pulling-drawer.js",

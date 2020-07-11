@@ -52,33 +52,26 @@
 	<!-- IF posts.user.signature -->
 	<div component="post/signature" data-uid="{posts.user.uid}" class="post-signature">{posts.user.signature}</div>
 	<!-- ENDIF posts.user.signature -->
-
+	<!-- IF posts.isMain -->
+	<!-- IMPORT partials/topic/topic-note.tpl -->
+	<!-- IMPORT partials/topic/votes-topic.tpl -->
+	<!-- ENDIF posts.isMain -->
+	<!-- IF !posts.isMain -->
 	<small class="pull-right" style="display: flex; justify-content: center">
 		<span class="post-tools">
-			<a component="post/reply" href="#" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->">[[topic:reply]]</a>
-			<a component="post/quote" href="#" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->">[[topic:quote]]</a>
+			<span component="post/reply" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->"><i class="fa fa-comment"></i></span>
+			<span component="post/quote" class="no-select <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->"><i class="fa fa-quote-left"></i></span>
 		</span>
-
 		<!-- IF !reputation:disabled -->
-		<span class="votes">
-			<a component="post/upvote" href="#" class="<!-- IF posts.upvoted -->upvoted<!-- ENDIF posts.upvoted -->">
-				<i class="fa fa-chevron-up"></i>
-			</a>
-
-			<span component="post/vote-count" data-votes="{posts.votes}">{posts.votes}</span>
-
-			<!-- IF !downvote:disabled -->
-			<a component="post/downvote" href="#" class="<!-- IF posts.downvoted -->downvoted<!-- ENDIF posts.downvoted -->">
-				<i class="fa fa-chevron-down"></i>
-			</a>
-			<!-- ENDIF !downvote:disabled -->
-		</span>
+		<!-- IMPORT partials/topic/votes.tpl -->
 		<!-- ENDIF !reputation:disabled -->
 		<!-- IMPORT partials/topic/post-menu.tpl -->
 		<!-- IMPORT partials/thread_tools.tpl -->
 	</small>
+	<!-- ENDIF !posts.isMain -->
 
 	<!-- IF !hideReplies -->
+	<!-- IF !posts.isMain -->
 	<a component="post/reply-count" href="#" class="threaded-replies no-select <!-- IF !posts.replies.count -->hidden<!-- ENDIF !posts.replies.count -->">
 		<span component="post/reply-count/avatars" class="avatars <!-- IF posts.replies.hasMore -->hasMore<!-- ENDIF posts.replies.hasMore -->">
 			{{{each posts.replies.users}}}
@@ -87,12 +80,11 @@
 		</span>
 
 		<span class="replies-count" component="post/reply-count/text" data-replies="{posts.replies.count}">{posts.replies.text}</span>
-		<span class="replies-last hidden-xs">[[topic:last_reply_time]] <span class="timeago" title="{posts.replies.timestampISO}"></span></span>
-
 		<i class="fa fa-fw fa-chevron-right" component="post/replies/open"></i>
 		<i class="fa fa-fw fa-chevron-down hidden" component="post/replies/close"></i>
 		<i class="fa fa-fw fa-spin fa-spinner hidden" component="post/replies/loading"></i>
 	</a>
+	<!-- ENDIF !posts.isMain -->
 	<!-- ENDIF !hideReplies -->
 </div>
 

@@ -1,6 +1,6 @@
 {
     "id": "nodebb-theme-thesis-custom",
-    "name": "Persona",
+    "name": "Custom theme",
     "description": "The default theme for Dealbee. Uses a standard approach to forum design.",
     "url": "https://github.com/dealbee/nodebb-theme-thesis-custom",
     "screenshot": "screenshot.png"

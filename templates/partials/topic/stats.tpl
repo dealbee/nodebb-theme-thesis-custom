@@ -1,4 +1,4 @@
-<div class="col-xs-12" id="stat-container">
+<span id="stat-container">
     <span>
         <i class="fa fa-comment-o"></i>
         <span component="topic/post-count" class="human-readable-number"
@@ -10,4 +10,4 @@
         <i class="fa fa-eye"></i>
         <span class="human-readable-number" title="{viewcount}">{viewcount}</span>
     </span>
-</div>
+</span>

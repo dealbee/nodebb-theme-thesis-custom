@@ -157,15 +157,19 @@ library.addOptionalDataToTopic = function (data, callback) {
             data.templateData.postcount = data.templateData.postcount - 1;
             library.formatOptionalData(optionalData);
             data.templateData.optionalData = optionalData;
-            if (data.templateData.privileges.read == true && data.templateData.privileges.editable == false && data.templateData.locked == 1) {
+            let uid = data.templateData.loggedInUser.uid;
+            let isAdminOrMod = await library.isAdminOrMod(uid, data.templateData.cid);
+            if ((isAdminOrMod || data.templateData.uid === data.templateData.loggedInUser.uid) && data.templateData.locked === 1) {
                 data.templateData.privileges.editable = true;
                 data.templateData.posts[0].display_moderator_tools = true;
                 data.templateData.posts[0].display_post_menu = 1;
                 data.templateData.posts[0].display_edit_tools = true;
             }
-            if (!data.templateData.locked && !data.templateData.privileges.editable) {
+            if (!isAdminOrMod && data.templateData.uid === data.templateData.loggedInUser.uid && data.templateData.locked !== 1) {
+                data.templateData.privileges.editable = false;
                 data.templateData.posts[0].display_moderator_tools = false;
                 data.templateData.posts[0].display_edit_tools = false;
+                data.templateData.posts[0].display_post_menu = 0;
             }
             data.templateData.posts.forEach(post => {
                 if (post.pid == data.templateData.mainPid) {
@@ -211,8 +215,27 @@ library.getUnreadTids = function (data, callback) {
     });
 }
 library.topicCreate = function (data, callback) {
-    data.topic.locked = 1;
-    callback(null, data);
+    let adminAndMods = null;
+    async.waterfall([
+        async function (next) {
+            let isAdminOrMods = await library.isAdminOrMod(data.topic.uid, data.topic.cid)
+            if (!isAdminOrMods) {
+                adminAndMods = await library.getAllAdminAndMod(data.topic.cid);
+                data.topic.locked = 1;
+                notifications.create({
+                    bodyShort: "[[thesiscustom:topic-in-queue]]",
+                    path: '/topic/' + data.topic.tid,
+                    nid: "queue:tid:" + data.topic.tid,
+                    tid: data.topic.tid,
+                    from: data.topic.uid,
+                }, (err, notification) => {
+                    notifications.push(notification, adminAndMods, () => {
+                    });
+                });
+            }
+        }], function (err, res) {
+        callback(null, data);
+    });
 }
 library.categoryBuild = function (data, callback) {
     data.templateData.topics = data.templateData.topics.filter(topic => {
@@ -229,7 +252,7 @@ library.getCategoryTopics = function (data, callback) {
         data.topics = data.topics.filter(topic => {
             return topic.locked !== 1 || isAdminOrMod || data.uid === topic.uid
         })
-        callback(null,data)
+        callback(null, data)
     });
 }
 library.userBuild = function (data, callback) {
@@ -254,37 +277,52 @@ library.userBuild = function (data, callback) {
     callback(null, data);
 }
 library.topicLock = function (data) {
-    if (data.topic.uid !== data.uid) {
-        let topic = null;
-        let userInfo = null;
-        async.waterfall([
-            async function (next) {
-                topic = await topics.getTopicsData([data.topic.tid])
-                topic = topic[0]
-                userInfo = await user.getUsers([data.uid], 1)
-                userInfo = userInfo[0]
-            }], function (err, res) {
+    let topic = null;
+    let userInfo = null;
+    async.waterfall([
+        async function (next) {
+            let adminAndMods = await library.getAllAdminAndMod(data.topic.cid)
+            adminAndMods = [...adminAndMods, data.topic.uid.toString()];
+            adminAndMods = adminAndMods.filter(e => e !== data.uid.toString())
+            adminAndMods = Array.from(new Set(adminAndMods));
+            topic = await topics.getTopicsData([data.topic.tid])
+            topic = topic[0]
+            userInfo = await user.getUsers([data.uid], 1)
+            userInfo = userInfo[0]
             let bodyShort = null;
             let nid = null;
             if (data.topic.isLocked) {
                 bodyShort = `[[thesiscustom:lock-your-topic,${userInfo.username},${topic.title}]]`
                 nid = 'lock:tid:' + data.topic.tid + ':uid:' + data.uid
+                notifications.create({
+                    bodyShort,
+                    path: '/topic/' + data.topic.tid,
+                    nid,
+                    tid: data.topic.tid,
+                    from: data.uid,
+                }, (err, notification) => {
+                    notifications.push(notification, adminAndMods, () => {
+                    });
+                });
             } else {
                 bodyShort = `[[thesiscustom:unlock-your-topic,${userInfo.username},${topic.title}]]`
                 nid = 'unlock:tid:' + data.topic.tid + ':uid:' + data.uid
-            }
-            notifications.create({
-                bodyShort,
-                path: '/topic/' + data.topic.tid,
-                nid,
-                tid: data.topic.tid,
-                from: data.uid,
-            }, (err, notification) => {
-                notifications.push(notification, [data.topic.uid], () => {
+                await notifications.rescind(`queue:tid:${data.topic.tid}`)
+                notifications.create({
+                    bodyShort,
+                    path: '/topic/' + data.topic.tid,
+                    nid,
+                    tid: data.topic.tid,
+                    from: data.uid,
+                }, (err, notification) => {
+                    notifications.push(notification, [data.topic.uid], () => {
+                    });
                 });
-            });
-        });
-    }
+            }
+            socketIndex.server.sockets.emit('topic-locked',data);
+        }],function (err, res) {
+
+    });
 }
 library.hasAllAttributes = function (optionalData, props) {
     let flag = false;
@@ -402,6 +440,23 @@ library.isAdminOrMod = async function (uid, cid) {
     let isGlobalMod = await privileges.users.isGlobalModerator(uid);
     let isMod = await privileges.users.isModerator(uid, cid);
     return isAdmin || isGlobalMod || isMod;
+}
+library.getAllAdminAndMod = async function (cid) {
+    let asyncForEach = async function (array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    }
+    let members = await db.client.collection('objects').find({_key: `group:cid:${cid}:privileges:moderate:members`}).toArray();
+    let groupsPri = await db.client.collection('objects').find({_key: `group:cid:${cid}:privileges:groups:moderate:members`}).toArray();
+    members = members.map(member => member.value);
+    groupsPri = groupsPri.map(group => group.value);
+    groupsPri = [...groupsPri, "Global Moderators", "administrators"]
+    await asyncForEach(groupsPri, async group => {
+        let memsOfGroup = await groups.getMembers(group, 0, -1);
+        members = [...members, ...memsOfGroup];
+    })
+    return Array.from(new Set(members));
 }
 module.exports = library;
 

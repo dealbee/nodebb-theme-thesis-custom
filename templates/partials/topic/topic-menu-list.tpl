@@ -1,6 +1,6 @@
 <!-- IF privileges.editable -->
-<li <!-- IF locked -->hidden<!-- ENDIF locked -->><a component="topic/lock" href="#" class="<!-- IF locked -->hidden<!-- ENDIF locked -->"><i class="fa fa-fw fa-lock"></i> [[topic:thread_tools.lock]]</a></li>
-<li <!-- IF !locked -->hidden<!-- ENDIF !locked -->><a component="topic/unlock" href="#" class="<!-- IF !locked -->hidden<!-- ENDIF !locked -->"><i class="fa fa-fw fa-unlock"></i> [[topic:thread_tools.unlock]]</a></li>
+<li <!-- IF locked -->hidden<!-- ENDIF locked -->><a component="topic/lock" href="#" class="<!-- IF locked -->hidden<!-- ENDIF locked -->"><i class="fa fa-fw fa-close"></i> [[thesiscustom:thread_tools.disapproved]]</a></li>
+<li <!-- IF !locked -->hidden<!-- ENDIF !locked -->><a component="topic/unlock" href="#" class="<!-- IF !locked -->hidden<!-- ENDIF !locked -->"><i class="fa fa-fw fa-check"></i> [[thesiscustom:thread_tools.approved]]</a></li>
 <li><a component="topic/move" href="#"><i class="fa fa-fw fa-arrows"></i> [[topic:thread_tools.move]]</a></li>
 <li><a component="topic/fork" href="#"><i class="fa fa-fw fa-code-fork"></i> [[topic:thread_tools.fork]]</a></li>
 <li <!-- IF pinned -->hidden<!-- ENDIF pinned -->><a component="topic/pin" href="#" class="<!-- IF pinned -->hidden<!-- ENDIF pinned -->"><i class="fa fa-fw fa-thumb-tack"></i> [[topic:thread_tools.pin]]</a></li>

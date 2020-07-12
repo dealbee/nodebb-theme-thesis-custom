@@ -19,8 +19,19 @@
   "add-images": "Add images",
   "upload-image": "Upload an image",
   "pass-url": "or pass an image URL",
-  "lock-your-topic": "<strong>%1</strong> approved topic your topic: <strong>%2</strong>",
-  "unlock-your-topic": "<strong>%1</strong> disapproved your topic: <strong>%2</strong>",
+  "lock-your-topic": "<strong>%1</strong> approved topic topic: <strong>%2</strong>",
+  "unlock-your-topic": "<strong>%1</strong> disapproved topic: <strong>%2</strong>",
   "no_unread_topics": "No post to approve",
-  "approve": "Not approved posts"
+  "approve": "Not approved posts",
+  "disapproved_message": "This topic has not been approved",
+  "disapproved": "Disapproved",
+  "pin-on-dealbee": "Pin on Dealbee",
+  "thread_tools.approved": "Approve this topic",
+  "thread_tools.disapproved": "Disapprove this topic",
+  "topic-in-queue": "Topic is waiting for approval",
+  "add-note-success": "Note has been added",
+  "add-note-fail": "Fail to add note",
+  "add-image-success": "Successfully add images",
+  "add-image-success-message": "Page is reloading ...",
+  "saving-imgaes-fail": "Fail to save images"
 }

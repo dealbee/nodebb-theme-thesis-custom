@@ -4,8 +4,8 @@
         <h1 component="post/header" class="hidden-xs" itemprop="name">
             <i class="pull-left fa fa-thumb-tack <!-- IF !pinned -->hidden<!-- ENDIF !pinned -->"
                title="[[topic:pinned]]"></i>
-            <i class="pull-left fa fa-lock <!-- IF !locked -->hidden<!-- ENDIF !locked -->"
-               title="[[topic:locked]]"></i>
+            <i class="pull-left fa fa-info-circle <!-- IF !locked -->hidden<!-- ENDIF !locked -->"
+               title="[[thesiscustom:disapproved]]"></i>
             <i class="pull-left fa fa-arrow-circle-right <!-- IF !oldCid -->hidden<!-- ENDIF !oldCid -->"
                title="[[topic:moved]]"></i>
             {{{each icons}}}@value{{{end}}}
@@ -13,7 +13,7 @@
                 <!-- IF privileges.topics:pindealbee -->
                 <span id="pinDealbeeButton">
                     <button id="buttonPin" class="btn btn-success">
-                        <i class="fa fa-2x fa-thumb-tack"></i>
+                        <i class="fa fa-2x fa-thumb-tack" title="[[thesiscustom:pin-on-dealbee]]"></i>
                     </button>
                 </span>
                 <!-- ENDIF privileges.topics:pindealbee -->
@@ -133,7 +133,7 @@
             <!-- ENDIF merger -->
 
             <!-- IMPORT partials/topic/deleted-message.tpl -->
-
+            <!-- IMPORT partials/topic/disapproved_message.tpl -->
             <hr class="visible-xs"/>
 
             <ul component="topic" class="posts" data-tid="{tid}" data-cid="{cid}">

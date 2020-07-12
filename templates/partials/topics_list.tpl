@@ -30,7 +30,7 @@
 
 			<h2 component="topic/header" class="title">
 				<i component="topic/pinned" class="fa fa-thumb-tack <!-- IF !topics.pinned -->hide<!-- ENDIF !topics.pinned -->" title="[[topic:pinned]]"></i>
-				<i component="topic/locked" class="fa fa-lock <!-- IF !topics.locked -->hide<!-- ENDIF !topics.locked -->" title="[[topic:locked]]"></i>
+				<i component="topic/locked" class="fa fa-info-circle <!-- IF !topics.locked -->hide<!-- ENDIF !topics.locked -->" title="[[thesiscustom:disapproved]]"></i>
 				<i component="topic/moved" class="fa fa-arrow-circle-right <!-- IF !topics.oldCid -->hide<!-- ENDIF !topics.oldCid -->" title="[[topic:moved]]"></i>
 				{{{each icons}}}@value{{{end}}}
 

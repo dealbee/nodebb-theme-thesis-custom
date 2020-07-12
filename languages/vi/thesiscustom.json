@@ -19,8 +19,19 @@
   "add-images": "Thêm ảnh",
   "upload-image": "Tải ảnh lên",
   "pass-url": "hoặc dán một đường dẫn đến ảnh",
-  "lock-your-topic": "<strong>%1</strong> vừa bỏ duyệt chủ đề: <strong>%2</strong> của bạn",
-  "unlock-your-topic": "<strong>%1</strong> vừa duyệt chủ đề: <strong>%2</strong> của bạn",
+  "lock-your-topic": "<strong>%1</strong> vừa bỏ duyệt chủ đề: <strong>%2</strong>",
+  "unlock-your-topic": "<strong>%1</strong> vừa duyệt chủ đề: <strong>%2</strong>",
   "no_unread_topics": "Không có bài viết chờ xét duyệt",
-  "approve": "Chờ duyệt"
+  "approve": "Chờ duyệt",
+  "disapproved_message": "Bài đăng chưa được duyệt",
+  "disapproved": "Chưa được duyệt",
+  "pin-on-dealbee": "Ghim lên trang Dealbee",
+  "thread_tools.approved": "Duyệt chủ đề",
+  "thread_tools.disapproved": "Bỏ duyệt chủ đề",
+  "topic-in-queue": "Chủ đề đang chờ duyệt",
+  "add-note-success": "Chủ đề vừa được thêm ghi chú",
+  "add-note-fail": "Thêm ghi chú thất bại",
+  "add-image-success": "Thêm ảnh thành công",
+  "add-image-success-message": "Trang đang được tải lại ...",
+  "saving-imgaes-fail": "Lưu ảnh thất bại"
 }

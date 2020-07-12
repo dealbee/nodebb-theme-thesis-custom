@@ -10,10 +10,10 @@
 		{ "hook": "filter:topic.build", "method": "addUserToTopic" },
 		{ "hook": "filter:topic.build", "method": "addOptionalDataToTopic" },
 		{ "hook": "filter:topic.create", "method": "topicCreate" },
-		{ "hook": "filter:topics.getUnreadTids", "method": "getUnreadTids" },
 		{ "hook": "filter:account/profile.build", "method": "userBuild" },
 		{ "hook": "action:topic.lock", "method": "topicLock" },
-		{ "hook": "filter:category.topics.get", "method": "getCategoryTopics" }
+		{ "hook": "filter:category.topics.get", "method": "getCategoryTopics" },
+		{ "hook": "filter:topics.get", "method": "getCategoryTopics" }
 	],
 	"less":[
 		"less/modules/topic_custom.less",
@@ -29,7 +29,8 @@
 		"lib/modules/autohidingnavbar.min.js",
 		"lib/modules/quickreply.js",
 		"lib/modules/deleteImageButton.js",
-		"lib/note_add.js"
+		"lib/note_add.js",
+		"lib/lock_refresh.js"
 	],
 	"modules": {
 		"pulling.js": "node_modules/pulling/build/pulling-drawer.js",

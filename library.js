@@ -179,7 +179,6 @@ library.addOptionalDataToTopic = function (data, callback) {
             next(null, null)
         }
     ], function (err, res) {
-        console.log(data.templateData);
         callback(null, data);
     });
 }
@@ -219,8 +218,19 @@ library.categoryBuild = function (data, callback) {
     data.templateData.topics = data.templateData.topics.filter(topic => {
         return topic.locked !== 1 || data.templateData.privileges.isAdminOrMod || data.templateData.privileges.uid === topic.user.uid
     })
-    console.log(data.templateData.topics);
     callback(null, data);
+}
+library.getCategoryTopics = function (data, callback) {
+    let isAdminOrMod = null;
+    async.waterfall([
+        async function (next) {
+            isAdminOrMod = await library.isAdminOrMod(data.uid, data.cid);
+        }], function (err, res) {
+        data.topics = data.topics.filter(topic => {
+            return topic.locked !== 1 || isAdminOrMod || data.uid === topic.uid
+        })
+        callback(null,data)
+    });
 }
 library.userBuild = function (data, callback) {
     let asyncForEach = async function (array, callback) {
@@ -254,8 +264,6 @@ library.topicLock = function (data) {
                 userInfo = await user.getUsers([data.uid], 1)
                 userInfo = userInfo[0]
             }], function (err, res) {
-            console.log(topic)
-            console.log(userInfo);
             let bodyShort = null;
             let nid = null;
             if (data.topic.isLocked) {
@@ -388,6 +396,12 @@ library.canTakeNote = async function (uid, cid) {
     let cids = await this.canTakeNoteCids(uid);
     let result = new Set(cids).has(cid.toString());
     return result;
+}
+library.isAdminOrMod = async function (uid, cid) {
+    let isAdmin = await privileges.users.isAdministrator(uid);
+    let isGlobalMod = await privileges.users.isGlobalModerator(uid);
+    let isMod = await privileges.users.isModerator(uid, cid);
+    return isAdmin || isGlobalMod || isMod;
 }
 module.exports = library;
 

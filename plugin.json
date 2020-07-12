@@ -11,9 +11,9 @@
 		{ "hook": "filter:topic.build", "method": "addOptionalDataToTopic" },
 		{ "hook": "filter:topic.create", "method": "topicCreate" },
 		{ "hook": "filter:topics.getUnreadTids", "method": "getUnreadTids" },
-		{ "hook": "filter:category.build", "method": "categoryBuild" },
 		{ "hook": "filter:account/profile.build", "method": "userBuild" },
-		{ "hook": "action:topic.lock", "method": "topicLock" }
+		{ "hook": "action:topic.lock", "method": "topicLock" },
+		{ "hook": "filter:category.topics.get", "method": "getCategoryTopics" }
 	],
 	"less":[
 		"less/modules/topic_custom.less",

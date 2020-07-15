@@ -177,7 +177,8 @@ library.addOptionalDataToTopic = function (data, callback) {
                 }
             })
             data.templateData.privileges.edit_note = await library.canTakeNote(data.templateData.loggedInUser.uid, data.templateData.cid);
-            data.templateData.mainPost = data.templateData.posts[0]
+            if (data.templateData.mainPid === data.templateData.posts[0].pid)
+                data.templateData.posts[0].isMain = true;
             let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
             data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
             next(null, null)
@@ -319,8 +320,8 @@ library.topicLock = function (data) {
                     });
                 });
             }
-            socketIndex.server.sockets.emit('topic-locked',data);
-        }],function (err, res) {
+            socketIndex.server.sockets.emit('topic-locked', data);
+        }], function (err, res) {
 
     });
 }

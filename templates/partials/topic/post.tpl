@@ -4,7 +4,7 @@
 			{buildAvatar(posts.user, "sm2x", true, "", "user/picture")}
 			<i component="user/status" class="fa fa-circle status {posts.user.status}" title="[[global:{posts.user.status}]]"></i>
 		</a>
-	</div>
+	</div>@fir
 
 	<small class="pull-left">
 		<strong>

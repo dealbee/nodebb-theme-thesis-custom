@@ -142,9 +142,9 @@
                                             deleted
                                             <!-- ENDIF posts.deleted -->
 
-                                            <!-- IF !@first -->
+                                            <!-- IF !posts.isMain -->
                                             topic-comment
-                                            <!-- ENDIF !@first -->"
+                                            <!-- ENDIF !posts.isMain -->"
                 <!-- IMPORT partials/data/topic.tpl -->>
                 <a component="post/anchor" data-index="{posts.index}" id="{posts.index}"></a>
 

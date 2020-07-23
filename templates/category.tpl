@@ -12,7 +12,7 @@
 
 		<div class="clearfix">
 			<!-- IF privileges.topics:create -->
-			<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary" data-ajaxify="false" role="button">[[category:new_topic_button]]</a>
+			<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary" data-ajaxify="false" role="button">[[thesiscustom:new_topic_button]]</a>
 			<!-- ELSE -->
 				<!-- IF !loggedIn -->
 				<a component="category/post/guest" href="{config.relative_path}/login" class="btn btn-primary">[[category:guest-login-post]]</a>

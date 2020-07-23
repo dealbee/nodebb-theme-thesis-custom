@@ -1,5 +1,10 @@
 <!-- IF posts.display_moderator_tools -->
 <li role="presentation" class="dropdown-header">[[topic:tools]]</li>
+<!-- IF mainPost.display_edit_tools -->
+<!-- IF posts.isMain -->
+<!-- IMPORT partials/topic/addImageButton.tpl -->
+<!-- ENDIF posts.isMain -->
+<!-- ENDIF mainPost.display_edit_tools -->
 <li role="presentation">
 	<a component="post/edit" role="menuitem" tabindex="-1" href="#">
 		<span class="menu-icon"><i class="fa fa-fw fa-pencil"></i></span> [[topic:edit]]

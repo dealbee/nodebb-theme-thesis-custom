@@ -157,15 +157,15 @@ library.addOptionalDataToTopic = function (data, callback) {
             data.templateData.postcount = data.templateData.postcount - 1;
             library.formatOptionalData(optionalData);
             data.templateData.optionalData = optionalData;
-            let uid = data.templateData.loggedInUser.uid;
-            let isAdminOrMod = await library.isAdminOrMod(uid, data.templateData.cid);
-            if ((isAdminOrMod || data.templateData.uid === data.templateData.loggedInUser.uid) && data.templateData.locked === 1) {
+            let loginUid = data.templateData.loggedInUser.uid;
+            let isAdminOrMod = await library.isAdminOrMod(loginUid, data.templateData.cid);
+            if ((isAdminOrMod || data.templateData.uid === loginUid) && data.templateData.locked === 1) {
                 data.templateData.privileges.editable = true;
                 data.templateData.posts[0].display_moderator_tools = true;
                 data.templateData.posts[0].display_post_menu = 1;
                 data.templateData.posts[0].display_edit_tools = true;
             }
-            if (!isAdminOrMod && data.templateData.uid === data.templateData.loggedInUser.uid && data.templateData.locked !== 1) {
+            if (!isAdminOrMod && data.templateData.uid === loginUid && data.templateData.locked !== 1) {
                 data.templateData.privileges.editable = false;
                 data.templateData.posts[0].display_moderator_tools = false;
                 data.templateData.posts[0].display_edit_tools = false;
@@ -181,6 +181,8 @@ library.addOptionalDataToTopic = function (data, callback) {
                 data.templateData.posts[0].isMain = true;
             let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
             data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
+            data.templateData.mainPost = data.templateData.posts[0];
+            data.templateData.isPinned = await library.isPinned(data.templateData.tid)
             next(null, null)
         }
     ], function (err, res) {
@@ -248,7 +250,7 @@ library.getCategoryTopics = function (data, callback) {
     let isAdminOrMod = null;
     async.waterfall([
         async function (next) {
-            isAdminOrMod = await library.isAdminOrMod(data.uid, data.cid);
+            isAdminOrMod = await library.isAdminOrMod(data.uid, data.topics[0].cid);
         }], function (err, res) {
         data.topics = data.topics.filter(topic => {
             return topic.locked !== 1 || isAdminOrMod || data.uid === topic.uid
@@ -277,6 +279,17 @@ library.userBuild = function (data, callback) {
     });
     callback(null, data);
 }
+library.topicDelete = function(data, callback){
+    async.waterfall([
+        async function (next) {
+            let deleteResult = await db.client.collection('objects').deleteMany({_key: /^pindealbee:/, tid: parseInt(data.topicData.tid)});
+            if (deleteResult.result.n > 0 && deleteResult.result.ok){
+                socketIndex.server.sockets.emit('unpin-post', data.topicData);
+            }
+        }], function (err, res) {
+        callback(null, data);
+    });
+}
 library.topicLock = function (data) {
     let topic = null;
     let userInfo = null;
@@ -293,6 +306,10 @@ library.topicLock = function (data) {
             let bodyShort = null;
             let nid = null;
             if (data.topic.isLocked) {
+                let deleteResult = await db.client.collection('objects').deleteMany({_key: /^pindealbee:/, tid: parseInt(data.topic.tid)});
+                if (deleteResult.result.n > 0 && deleteResult.result.ok){
+                    socketIndex.server.sockets.emit('unpin-post', topic);
+                }
                 bodyShort = `[[thesiscustom:lock-your-topic,${userInfo.username},${topic.title}]]`
                 nid = 'lock:tid:' + data.topic.tid + ':uid:' + data.uid
                 notifications.create({
@@ -458,6 +475,11 @@ library.getAllAdminAndMod = async function (cid) {
         members = [...members, ...memsOfGroup];
     })
     return Array.from(new Set(members));
+}
+
+library.isPinned = async function(tid){
+    let isPinned =  await db.client.collection('objects').find({_key: /^pindealbee:/, tid: parseInt(tid)}).toArray()
+    return isPinned.length > 0;
 }
 module.exports = library;
 

@@ -2,22 +2,21 @@
 <div class="row">
     <div class="col-xs-12">
         <h1 component="post/header" class="hidden-xs" itemprop="name">
-            <i class="pull-left fa fa-thumb-tack <!-- IF !pinned -->hidden<!-- ENDIF !pinned -->"
+            <i style="color: #4CAF50" component="topic/pinned"
+               class="fa fa-check-circle <!-- IF locked -->hidden<!-- ENDIF locked --> <!-- IF deleted -->hidden<!-- ENDIF deleted -->"
+               title="[[thesiscustom:approved]]"></i>
+            <i class="pull-left fa fa-thumb-tack hidden <!-- IF !pinned -->hidden<!-- ENDIF !pinned -->"
                title="[[topic:pinned]]"></i>
-            <i class="pull-left fa fa-info-circle <!-- IF !locked -->hidden<!-- ENDIF !locked -->"
+            <i style="color: #fda34b"
+               class="pull-left fa fa-hourglass-half <!-- IF !locked -->hidden<!-- ENDIF !locked --> <!-- IF deleted -->hidden<!-- ENDIF deleted -->"
                title="[[thesiscustom:disapproved]]"></i>
-            <i class="pull-left fa fa-arrow-circle-right <!-- IF !oldCid -->hidden<!-- ENDIF !oldCid -->"
+            <i style="color: #337ab7"
+               class="pull-left fa fa-arrow-circle-right <!-- IF !oldCid -->hidden<!-- ENDIF !oldCid -->"
                title="[[topic:moved]]"></i>
             {{{each icons}}}@value{{{end}}}
             <span class="topic-title" component="topic/title">
-                <!-- IF privileges.topics:pindealbee -->
-                <span id="pinDealbeeButton">
-                    <button id="buttonPin" class="btn btn-success">
-                        <i class="fa fa-2x fa-thumb-tack" title="[[thesiscustom:pin-on-dealbee]]"></i>
-                    </button>
-                </span>
-                <!-- ENDIF privileges.topics:pindealbee -->
                 {title}
+            <i style="color: #00b3ee" class="fa fa-star <!-- IF !isPinned --> hidden <!-- ENDIF !isPinned -->" title="[[thesiscustom:isPinned]]"></i>
             </span>
         </h1>
     </div>
@@ -35,10 +34,6 @@
         <!-- IMPORT partials/topic/imageSlideshow.tpl -->
 
         <!-- ENDIF optionalData.images.length -->
-
-        <!-- IF mainPost.display_edit_tools -->
-        <!-- IMPORT partials/topic/addImageButton.tpl -->
-        <!-- ENDIF mainPost.display_edit_tools -->
 
         <!-- IF optionalData.dealUrl -->
         <a href="{optionalData.dealUrl}" class="btn btn-success" target="_blank" id="optionalData-dealUrl">
@@ -137,7 +132,7 @@
             <hr class="visible-xs"/>
 
             <ul component="topic" class="posts" data-tid="{tid}" data-cid="{cid}">
-                 <!-- BEGIN posts -->
+                <!-- BEGIN posts -->
                 <li component="post" class="<!-- IF posts.deleted -->
                                             deleted
                                             <!-- ENDIF posts.deleted -->

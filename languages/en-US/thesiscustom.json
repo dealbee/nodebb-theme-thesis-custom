@@ -19,13 +19,13 @@
   "add-images": "Add images",
   "upload-image": "Upload an image",
   "pass-url": "or pass an image URL",
-  "lock-your-topic": "<strong>%1</strong> approved topic topic: <strong>%2</strong>",
+  "lock-your-topic": "<strong>%1</strong> approved topic: <strong>%2</strong>",
   "unlock-your-topic": "<strong>%1</strong> disapproved topic: <strong>%2</strong>",
   "no_unread_topics": "No post to approve",
   "approve": "Not approved posts",
   "disapproved_message": "This topic has not been approved",
   "disapproved": "Disapproved",
-  "pin-on-dealbee": "Pin on Dealbee",
+  "pin-on-dealbee": "Pin on front page",
   "thread_tools.approved": "Approve this topic",
   "thread_tools.disapproved": "Disapprove this topic",
   "topic-in-queue": "Topic is waiting for approval",
@@ -33,5 +33,15 @@
   "add-note-fail": "Fail to add note",
   "add-image-success": "Successfully add images",
   "add-image-success-message": "Page is reloading ...",
-  "saving-imgaes-fail": "Fail to save images"
+  "saving-imgaes-fail": "Fail to save images",
+  "add-image": "Add images",
+  "thread_tools.delete-posts":"Delete comments",
+  "thread_tools.delete": "Delete topic",
+  "thread_tools.restore": "Restore topic",
+  "thread_tools.purge": "Purge topic",
+  "thread_tools.delete_posts_instruction": "Choose comment to delete",
+  "new_topic_button": "New topic",
+  "approved": "Approved",
+  "isPinned": "Pinned on front page"
+
 }

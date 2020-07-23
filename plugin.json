@@ -12,8 +12,8 @@
 		{ "hook": "filter:topic.create", "method": "topicCreate" },
 		{ "hook": "filter:account/profile.build", "method": "userBuild" },
 		{ "hook": "action:topic.lock", "method": "topicLock" },
-		{ "hook": "filter:category.topics.get", "method": "getCategoryTopics" },
-		{ "hook": "filter:topics.get", "method": "getCategoryTopics" }
+		{ "hook": "filter:topics.get", "method": "getCategoryTopics" },
+		{ "hook": "filter:topic.delete", "method": "topicDelete" }
 	],
 	"less":[
 		"less/modules/topic_custom.less",

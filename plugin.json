@@ -13,13 +13,15 @@
 		{ "hook": "filter:account/profile.build", "method": "userBuild" },
 		{ "hook": "action:topic.lock", "method": "topicLock" },
 		{ "hook": "filter:topics.get", "method": "getCategoryTopics" },
-		{ "hook": "filter:topic.delete", "method": "topicDelete" }
+		{ "hook": "filter:topic.delete", "method": "topicDelete" },
+		{ "hook": "filter:topics.addPostData", "method": "addPostData" }
 	],
 	"less":[
 		"less/modules/topic_custom.less",
 		"less/modules/lightslider.less",
 		"less/modules/deleteImageButton.less",
-		"less/topic-note.less"
+		"less/topic-note.less",
+		"less/votes-topic.less"
 	],
 	"scripts": [
 		"lib/persona.js",

@@ -12,6 +12,8 @@ const socketIndex = module.parent.require('./socket.io/index');
 const privileges = require.main.require('./src/privileges');
 const topics = require.main.require('./src/topics');
 const notifications = require.main.require('./src/notifications');
+const nconf = require.main.require('nconf');
+const RELATIVE_PATH = nconf.get('relative_path');
 let library = {};
 
 library.init = function (params, callback) {
@@ -21,6 +23,7 @@ library.init = function (params, callback) {
     app.get('/admin/plugins/thesis-custom', middleware.admin.buildHeader, renderAdmin);
     app.get('/api/admin/plugins/thesis-custom', renderAdmin);
     modulesSockets.submitNote = function (socket, data, callback) {
+        let uid = socket.uid
         let topic = null;
         let error = null;
         async.waterfall([
@@ -28,8 +31,13 @@ library.init = function (params, callback) {
                 topic = await db.client.collection('objects').find({_key: `topic:${data.tid}`}).toArray();
                 topic = topic[0];
                 topic.note = data.content;
+                topic.uidAddNote = uid;
+                let user = await db.client.collection('objects').find({_key: `user:${uid}`}).toArray()
+                user = user[0];
                 try {
                     db.client.collection('objects').save(topic);
+                    data.userslugAddNote = user.userslug;
+                    data.usernameAddNote = user.username;
                     socketIndex.server.sockets.emit('note-edit', data);
                 } catch (e) {
                     error = e;
@@ -172,30 +180,63 @@ library.addOptionalDataToTopic = function (data, callback) {
                 data.templateData.posts[0].display_post_menu = 0;
             }
             data.templateData.posts.forEach(post => {
-                if (post.pid == data.templateData.mainPid) {
+                if (post.pid === data.templateData.mainPid) {
                     post.isMain = true;
                 }
             })
-            data.templateData.privileges.edit_note = await library.canTakeNote(data.templateData.loggedInUser.uid, data.templateData.cid);
+            data.templateData.posts[0].edit_note = await library.canTakeNote(data.templateData.loggedInUser.uid, data.templateData.cid);
+            data.templateData.posts[0].note = optionalData.note;
             if (data.templateData.mainPid === data.templateData.posts[0].pid)
                 data.templateData.posts[0].isMain = true;
             let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
             data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
-            data.templateData.mainPost = data.templateData.posts[0];
             data.templateData.isPinned = await library.isPinned(data.templateData.tid)
+            let userAddNote = await db.client.collection('objects').find({_key: `user:${optionalData.uidAddNote}`}).toArray()
+            userAddNote = userAddNote[0];
+            data.templateData.posts[0].usernameAddNote = userAddNote.username;
+            data.templateData.posts[0].userslugAddNote = '/' + RELATIVE_PATH + 'user/' + userAddNote.userslug;
+            data.templateData.posts[0].postcount = data.templateData.postcount
+            data.templateData.posts[0].viewcount = data.templateData.viewcount
+            data.templateData.mainPost = data.templateData.posts[0];
             next(null, null)
         }
     ], function (err, res) {
-        console.log(data.templateData);
         callback(null, data);
     });
 }
-// library.unreadBuild = function (data, callback) {
-//     console.log(data.templateData.topics)
-//     data.templateData.topics = data.templateData.topics.filter(topic => topic.locked == 1)
-//     data.templateData.topicCount = data.templateData.topics.length;
-//     callback(null, data);
-// }
+library.addPostData = function (data, callback) {
+    let asyncForEach = async function (array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    }
+    async.waterfall([
+        async function (next) {
+            let tid = data.posts[0].tid;
+            let mainPid = await db.client.collection('objects').find({_key: `topic:${tid}`}).toArray();
+            let userAddNote = await db.client.collection('objects').find({_key: `user:${mainPid[0].uidAddNote}`}).toArray();
+            let usernameAddNote = userAddNote[0].username;
+            let userslugAddNote = userAddNote[0].userslug;
+            let viewCount = mainPid[0].viewcount;
+            let postCount = mainPid[0].postcount;
+            let cid = mainPid[0].cid;
+            let note = mainPid[0].note;
+            mainPid = mainPid[0].mainPid;
+            await asyncForEach(data.posts, async e => {
+                if (e.pid === parseInt(mainPid)) {
+                    e.isMain = true;
+                    e.edit_note = await library.canTakeNote(data.uid, cid);
+                    e.note = note;
+                    e.usernameAddNote = usernameAddNote;
+                    e.userslugAddNote = `/${RELATIVE_PATH}user/${userslugAddNote}`;
+                    e.viewcount = viewCount;
+                    e.postcount = postCount;
+                }
+            })
+        }], function (err, res) {
+        callback(null, data);
+    })
+}
 library.getUnreadTids = function (data, callback) {
     let filterLocked = async function (tids) {
         let tidsFull = await topics.getTopicsByTids(data.tids);
@@ -280,11 +321,14 @@ library.userBuild = function (data, callback) {
     });
     callback(null, data);
 }
-library.topicDelete = function(data, callback){
+library.topicDelete = function (data, callback) {
     async.waterfall([
         async function (next) {
-            let deleteResult = await db.client.collection('objects').deleteMany({_key: /^pindealbee:/, tid: parseInt(data.topicData.tid)});
-            if (deleteResult.result.n > 0 && deleteResult.result.ok){
+            let deleteResult = await db.client.collection('objects').deleteMany({
+                _key: /^pindealbee:/,
+                tid: parseInt(data.topicData.tid)
+            });
+            if (deleteResult.result.n > 0 && deleteResult.result.ok) {
                 socketIndex.server.sockets.emit('unpin-post', data.topicData);
             }
         }], function (err, res) {
@@ -307,8 +351,11 @@ library.topicLock = function (data) {
             let bodyShort = null;
             let nid = null;
             if (data.topic.isLocked) {
-                let deleteResult = await db.client.collection('objects').deleteMany({_key: /^pindealbee:/, tid: parseInt(data.topic.tid)});
-                if (deleteResult.result.n > 0 && deleteResult.result.ok){
+                let deleteResult = await db.client.collection('objects').deleteMany({
+                    _key: /^pindealbee:/,
+                    tid: parseInt(data.topic.tid)
+                });
+                if (deleteResult.result.n > 0 && deleteResult.result.ok) {
                     socketIndex.server.sockets.emit('unpin-post', topic);
                 }
                 bodyShort = `[[thesiscustom:lock-your-topic,${userInfo.username},${topic.title}]]`
@@ -478,8 +525,8 @@ library.getAllAdminAndMod = async function (cid) {
     return Array.from(new Set(members));
 }
 
-library.isPinned = async function(tid){
-    let isPinned =  await db.client.collection('objects').find({_key: /^pindealbee:/, tid: parseInt(tid)}).toArray()
+library.isPinned = async function (tid) {
+    let isPinned = await db.client.collection('objects').find({_key: /^pindealbee:/, tid: parseInt(tid)}).toArray()
     return isPinned.length > 0;
 }
 module.exports = library;

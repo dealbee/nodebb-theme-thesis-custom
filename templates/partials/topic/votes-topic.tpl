@@ -1,16 +1,12 @@
 <div class="votes votes-topic">
     <div class="btn-group" role="group">
-        <button class="btn btn-success <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->"
-                component="post/reply">
-            [[topic:reply]]
-        </button>
         <button component="post/upvote" type="button"
-                class="btn btn-secondary <!-- IF posts.upvoted -->upvoted<!-- ENDIF posts.upvoted -->">
+                class="btn btn-default <!-- IF posts.upvoted -->upvoted<!-- ENDIF posts.upvoted -->">
             <i class="fa fa-thumbs-up"></i>
         </button>
         <!-- IF !downvote:disabled -->
         <button component="post/downvote" type="button"
-                class="btn btn-secondary <!-- IF posts.downvoted -->downvoted<!-- ENDIF posts.downvoted -->">
+                class="btn btn-default <!-- IF posts.downvoted -->downvoted<!-- ENDIF posts.downvoted -->">
             <i class="fa fa-thumbs-down"></i>
         </button>
         <!-- ENDIF !downvote:disabled -->
@@ -18,7 +14,20 @@
             {posts.votes}
         </button>
     </div>
-    <!-- IMPORT partials/topic/stats.tpl -->
+    <div class="btn-group" role="group">
+        <button class="btn btn-default <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->"
+                component="post/reply">
+            <i class="fa fa-comment"></i>
+        </button>
+        <button class="btn btn-info disabled">{posts.postcount}</button>
+    </div>
+    <div class="btn-group" role="group">
+        <button class="btn btn-default disabled"
+                component="post/reply">
+            <i class="fa fa-eye"></i>
+        </button>
+        <button class="btn btn-info disabled">{posts.viewcount}</button>
+    </div>
     <small class="pull-right" style="display: flex; justify-content: center;">
         <!-- IF posts.isMain -->
         <!-- IF !locked -->

@@ -20,98 +20,23 @@
             </span>
         </h1>
     </div>
-    <!-- IF optionalData.discountPrice -->
-    <div class="col-xs-12" id="optionalData-priceContainer">
-        <span id="optionalData-discountPrice">{optionalData.discountPrice} {optionalData.currency}</span>
-        <span id="optionalData-price">{optionalData.price} {optionalData.currency}</span>
-    </div>
-    <!-- ENDIF optionalData.discountPrice -->
     <div class="col-xs-12 col-md-4" id="#optional-data">
+        <!-- IF optionalData.discountPrice -->
+        <div class="row" id="optionalData-priceContainer">
+            <div id="optionalData-price">{optionalData.price} {optionalData.currency}</div>
+            <div id="optionalData-discountPrice">{optionalData.discountPrice} {optionalData.currency}</div>
+        </div>
+        <!-- ENDIF optionalData.discountPrice -->
+        <!-- IMPORT partials/topic/more-info.tpl -->
+
         <!-- IF optionalData.images.length -->
-        <!-- IF mainPost.display_edit_tools -->
-        <!-- ENDIF mainPost.display_edit_tools -->
-
         <!-- IMPORT partials/topic/imageSlideshow.tpl -->
-
         <!-- ENDIF optionalData.images.length -->
-
         <!-- IF optionalData.dealUrl -->
-        <a href="{optionalData.dealUrl}" class="btn btn-success" target="_blank" id="optionalData-dealUrl">
+        <a href="{optionalData.dealUrl}" class="btn btn-info" target="_blank" id="optionalData-dealUrl">
             [[thesiscustom:visit-now]]
         </a>
         <!-- ENDIF optionalData.dealUrl -->
-        <ul class="list-group list-group-flush" id="moreInfo">
-            <!-- IF optionalData.brand -->
-            <li class="list-group-item row" id="optionalData-brand">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:brand]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.brand}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.brand -->
-            <!-- IF optionalData.maxDiscount -->
-            <li class="list-group-item row" id="optionalData-maxDiscount">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:max-discount-money]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.maxDiscount} {optionalData.currency}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.maxDiscount -->
-            <!-- IF optionalData.amount -->
-            <li class="list-group-item row" id="optionalData-amount">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:amount]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.amount}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.amount -->
-            <!-- IF optionalData.minOrder -->
-            <li class="list-group-item row" id="optionalData-minOrder">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:min-order]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.minOrder}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.minOrder -->
-            <!-- IF optionalData.coupon -->
-            <li class="list-group-item row" id="optionalData-coupon">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:coupon]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.coupon}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.coupon -->
-            <!-- IF optionalData.sku -->
-            <li class="list-group-item row" id="optionalData-sku">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:sku]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.sku}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.sku -->
-            <!-- IF optionalData.expiredAt -->
-            <li class="list-group-item row" id="optionalData-expiredAt">
-                <div class="col-xs-6 optional-data-title">
-                    [[thesiscustom:expired-date]]:
-                </div>
-                <div class="col-xs-6 optional-data-content">
-                    {optionalData.expiredTime} {optionalData.expiredDate}
-                </div>
-            </li>
-            <!-- ENDIF optionalData.expiredAt -->
-        </ul>
     </div>
     <div class="col-xs-12 col-md-8">
         <div class="topic <!-- IF widgets.sidebar.length -->col-lg-9 col-sm-12<!-- ELSE -->col-lg-12<!-- ENDIF widgets.sidebar.length -->">
@@ -136,7 +61,6 @@
                 <li component="post" class="<!-- IF posts.deleted -->
                                             deleted
                                             <!-- ENDIF posts.deleted -->
-
                                             <!-- IF !posts.isMain -->
                                             topic-comment
                                             <!-- ENDIF !posts.isMain -->"

@@ -1,20 +1,21 @@
-<div class="topic-note" data-tid={posts.tid}>
+<div class="topic-note <!-- IF !posts.note -->empty<!-- ENDIF !posts.note -->" data-tid={posts.tid}>
     <div class="row">
         <div class="col-xs-11">
-            <span id="note-title">Ghi chú: </span>
-            <!-- IF posts.note -->
-            <span id="note">{posts.note}</span>
-            <!-- ENDIF posts.note -->
-            <!-- IF !posts.note -->
-            <span id="note">Chưa có ghi chú</span>
-            <!-- ENDIF !posts.note -->
-            <div id="note-adder" class="pull-right">
-                <span class="<!-- IF !posts.note -->hidden<!-- ENDIF !posts.note -->">Added note by: </span><a href="{posts.userslugAddNote}">{posts.usernameAddNote}</a>
+            <span id="note-title">[[thesiscustom:note]]: </span>
+            <span id="note" data-note="{posts.note}">
+                <!-- IF posts.note -->
+                {posts.note}
+                <!-- ELSE -->
+                [[thesiscustom:note-empty]]
+                <!-- ENDIF posts.note -->
+            </span>
+            <div id="note-adder" class="pull-right <!-- IF !posts.note -->hidden<!-- ENDIF !posts.note -->">
+                <span>[[thesiscustom:note-adder]]: </span><a href="{posts.userslugAddNote}">{posts.usernameAddNote}</a>
             </div>
         </div>
         <!-- IF posts.edit_note -->
         <div class="col-xs-1">
-            <a data-toggle="collapse" data-target="#note-editor" class="pull-right">
+            <a data-toggle="collapse" data-target="#note-editor" class="pull-right" title="[[thesiscustom:note-add-btn]]">
                 <i class="fa fa-pencil"></i>
             </a>
         </div>

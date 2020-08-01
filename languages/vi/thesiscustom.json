@@ -41,6 +41,15 @@
   "thread_tools.delete_posts_instruction": "Chọn bình luận muốn xóa",
   "new_topic_button": "Thêm bài viết",
   "approved": "Được duyệt",
-  "isPinned": "Được ghim lên trên chính"
+  "isPinned": "Được ghim lên trên chính",
+
+  "more": "Thêm thông tin",
+  "expired-deal": "Deal đã hết hạn",
+  "time-left": "Còn lại",
+  "copy-coupon": "Đã sao chép mã giảm giá %1",
+  "note": "Ghi chú",
+  "note-empty": "Chưa có ghi chú",
+  "note-adder": "Được thêm bởi",
+  "note-add-btn": "Thêm ghi chú"
 
 }

@@ -3,7 +3,7 @@
     <div id="optionalData-expiredAt"
          class="<!-- IF optionalData.isExpired -->hidden<!-- ENDIF optionalData.isExpired -->"
          data-expiredtime="{optionalData.expiredAt}">
-        <span class="optionalData-title">Còn lại</span>:
+        <span class="optionalData-title">[[thesiscustom:time-left]]</span>:
         <a title="[[thesiscustom:expired-at,{optionalData.expiredTime},{optionalData.expiredDate}]]">
         <span class="display-time optionalData-content">
                 <i class="fa fa-clock-o selected"></i> <span class="display-days">00</span> ngày <span
@@ -15,7 +15,7 @@
     <a title="[[thesiscustom:expired-at,{optionalData.expiredTime},{optionalData.expiredDate}]]">
         <div id="optionalData-expiredAt-expired"
              class="<!-- IF !optionalData.isExpired -->hidden<!-- ENDIF !optionalData.isExpired -->">
-            Hết hạn
+            [[thesiscustom:expired-deal]]
         </div>
     </a>
     <!-- ENDIF optionalData.expiredAt -->
@@ -24,7 +24,7 @@
     <div id="optionalData-coupon"><span class="optionalData-title">[[thesiscustom:coupon]]</span>: <span
                 class="optionalData-content"><i class="fa fa-tag"></i> <span>{optionalData.coupon}</span></span></div>
     <!-- ENDIF optionalData.coupon -->
-    <a data-toggle="collapse" data-target="#optionalData-collapse" title="Xem thêm"><i
+    <a data-toggle="collapse" data-target="#optionalData-collapse" title="[[thesiscustom:more]]"><i
                 class="fa fa-info-circle"></i></a>
     <div id="optionalData-collapse" class="collapse">
         <!-- IF optionalData.brand -->

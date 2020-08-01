@@ -191,10 +191,12 @@ library.addOptionalDataToTopic = function (data, callback) {
             let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
             data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
             data.templateData.isPinned = await library.isPinned(data.templateData.tid)
-            let userAddNote = await db.client.collection('objects').find({_key: `user:${optionalData.uidAddNote}`}).toArray()
-            userAddNote = userAddNote[0];
-            data.templateData.posts[0].usernameAddNote = userAddNote.username;
-            data.templateData.posts[0].userslugAddNote = '/' + RELATIVE_PATH + 'user/' + userAddNote.userslug;
+            if(optionalData.uidAddNote){
+                let userAddNote = await db.client.collection('objects').find({_key: `user:${optionalData.uidAddNote}`}).toArray()
+                userAddNote = userAddNote[0];
+                data.templateData.posts[0].usernameAddNote = userAddNote.username;
+                data.templateData.posts[0].userslugAddNote = '/' + RELATIVE_PATH + 'user/' + userAddNote.userslug;
+            }
             data.templateData.posts[0].postcount = data.templateData.postcount
             data.templateData.posts[0].viewcount = data.templateData.viewcount
             data.templateData.mainPost = data.templateData.posts[0];

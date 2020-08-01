@@ -15,7 +15,7 @@
         </button>
     </div>
     <div class="btn-group" role="group">
-        <button class="btn btn-default <!-- IF !privileges.topics:reply -->hidden<!-- ENDIF !privileges.topics:reply -->"
+        <button class="btn btn-default <!-- IF !privileges.topics:reply -->disabled<!-- ENDIF !privileges.topics:reply -->"
                 component="post/reply">
             <i class="fa fa-comment"></i>
         </button>

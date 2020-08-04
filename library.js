@@ -188,8 +188,8 @@ library.addOptionalDataToTopic = function (data, callback) {
             data.templateData.posts[0].note = optionalData.note;
             if (data.templateData.mainPid === data.templateData.posts[0].pid)
                 data.templateData.posts[0].isMain = true;
-            let cid = await library.canPinCids(data.templateData.loggedInUser.uid)
-            data.templateData.privileges['topics:pindealbee'] = (cid.indexOf(cid) >= 0) || data.templateData.privileges.isAdminOrMod
+            let cids = await library.canPinCids(data.templateData.loggedInUser.uid)
+            data.templateData.privileges['topics:pindealbee'] = (cids.indexOf(data.templateData.cid.toString()) >= 0) || data.templateData.privileges.isAdminOrMod
             data.templateData.isPinned = await library.isPinned(data.templateData.tid)
             if(optionalData.uidAddNote){
                 let userAddNote = await db.client.collection('objects').find({_key: `user:${optionalData.uidAddNote}`}).toArray()
@@ -207,11 +207,6 @@ library.addOptionalDataToTopic = function (data, callback) {
     });
 }
 library.addPostData = function (data, callback) {
-    let asyncForEach = async function (array, callback) {
-        for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array);
-        }
-    }
     async.waterfall([
         async function (next) {
             let tid = data.posts[0].tid;
@@ -224,7 +219,7 @@ library.addPostData = function (data, callback) {
             let cid = mainPid[0].cid;
             let note = mainPid[0].note;
             mainPid = mainPid[0].mainPid;
-            await asyncForEach(data.posts, async e => {
+            await library.asyncForEach(data.posts, async e => {
                 if (e.pid === parseInt(mainPid)) {
                     e.isMain = true;
                     e.edit_note = await library.canTakeNote(data.uid, cid);
@@ -303,19 +298,14 @@ library.getCategoryTopics = function (data, callback) {
     });
 }
 library.userBuild = function (data, callback) {
-    let asyncForEach = async function (array, callback) {
-        for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array);
-        }
-    }
     let posts = data.templateData.posts;
     let bestPosts = data.templateData.bestPosts;
     async.waterfall([
         async function (next) {
-            await asyncForEach(posts, async post => {
+            await library.asyncForEach(posts, async post => {
                 post.topic.locked = await topics.isLocked(post.topic.tid)
             })
-            await asyncForEach(bestPosts, async post => {
+            await library.asyncForEach(bestPosts, async post => {
                 post.topic.locked = await topics.isLocked(post.topic.tid)
             })
         }], function (err, res) {
@@ -441,31 +431,40 @@ library.getAllImagePath = function (content) {
 }
 library.canPinCids = async function (uid) {
     //Get groups data that have privilige to pin to dealbee
-    var groupsData = await db.client.collection('objects').find({_key: /privileges:groups:pindealbee:event:pin:members/}).toArray();
+    let groupsData = await db.client.collection('objects').find({_key: /privileges:groups:pindealbee:event:pin:members/}).toArray();
     //Get users data that have privilige to pin to dealbee
-    var users = await db.client.collection('objects').find({_key: /privileges:pindealbee:event:pin:members/}).toArray();
+    let users = await db.client.collection('objects').find({_key: /privileges:pindealbee:event:pin:members/}).toArray();
     //Get groups' name
-    var groupNames = [];
+    let groupNames = [];
     groupsData.forEach(e => groupNames.push(e.value));
     //Get array of boolean determining user is in group
-    var usersInGroup = await groups.isMemberOfGroups(uid, groupNames)
-    var privilegeId = [];
+    let usersInGroup = await groups.isMemberOfGroups(uid, groupNames)
+    let privilegeId = [];
     groupsData.forEach((e, i) => {
-        if (usersInGroup[i] == true) {
+        if (usersInGroup[i] === true) {
             privilegeId.push(e._key);
         }
     })
     users.forEach(e => {
-        if (e.value == uid.toString()) {
+        if (e.value === uid.toString()) {
             privilegeId.push(e._key);
         }
     })
-    var cids = privilegeId.map(e => e = e.split(":")[2]);
-    cids = [...new Set(cids)];
-    cids = cids.map(e => {
-        return e = parseInt(e);
+    let cids = privilegeId.map(e => e = e.split(":")[2]);
+    let categories = await db.client.collection('objects').find({_key: /^category:/}).toArray();
+    await library.asyncForEach(categories, async (category, i)=>{
+        let isMod  = await user.isModerator(uid, category.cid);
+        if (isMod){
+            cids.push(category.cid.toString())
+        }
     })
+    cids = [...new Set(cids)];
     return cids;
+}
+library.asyncForEach = async function (array, callback) {
+    for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+    }
 }
 library.canTakeNoteCids = async function (uid) {
     //Get groups data that have privilige to pin to dealbee
@@ -510,17 +509,12 @@ library.isAdminOrMod = async function (uid, cid) {
     return isAdmin || isGlobalMod || isMod;
 }
 library.getAllAdminAndMod = async function (cid) {
-    let asyncForEach = async function (array, callback) {
-        for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array);
-        }
-    }
     let members = await db.client.collection('objects').find({_key: `group:cid:${cid}:privileges:moderate:members`}).toArray();
     let groupsPri = await db.client.collection('objects').find({_key: `group:cid:${cid}:privileges:groups:moderate:members`}).toArray();
     members = members.map(member => member.value);
     groupsPri = groupsPri.map(group => group.value);
     groupsPri = [...groupsPri, "Global Moderators", "administrators"]
-    await asyncForEach(groupsPri, async group => {
+    await library.asyncForEach(groupsPri, async group => {
         let memsOfGroup = await groups.getMembers(group, 0, -1);
         members = [...members, ...memsOfGroup];
     })

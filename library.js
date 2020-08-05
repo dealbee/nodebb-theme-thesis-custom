@@ -294,6 +294,9 @@ library.getCategoryTopics = function (data, callback) {
         data.topics = data.topics.filter(topic => {
             return topic.locked !== 1 || isAdminOrMod || data.uid === topic.uid
         })
+        data.topics.forEach(topic=>{
+            topic.postcount--;
+        })
         callback(null, data)
     });
 }

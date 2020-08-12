@@ -1,4 +1,4 @@
-<div class="clearfix post-header">
+<div class="clearfix post-header <!-- IF posts.isMain -->hidden<!-- ENDIF posts.isMain -->">
 	<div class="icon pull-left">
 		<a href="<!-- IF posts.user.userslug -->{config.relative_path}/user/{posts.user.userslug}<!-- ELSE -->#<!-- ENDIF posts.user.userslug -->">
 			{buildAvatar(posts.user, "sm2x", true, "", "user/picture")}
@@ -43,9 +43,30 @@
 </div>
 
 <br />
-
-<div class="content" component="post/content" itemprop="text">
-	{posts.content}
+<div class="row">
+	<div class="content <!-- IF posts.isMain -->col-md-5 main<!-- ENDIF posts.isMain -->" component="post/content" itemprop="text">
+		{posts.content}
+		<!-- IF posts.isMain -->
+		<!-- IMPORT partials/topic/topic-note.tpl -->
+		<!-- ENDIF posts.isMain -->
+	</div>
+	<!-- IF posts.isMain -->
+	<div class="col-xs-12 col-md-3" id="optional-data">
+		<!-- IF optionalData.images.length -->
+		<!-- IMPORT partials/topic/imageSlideshow.tpl -->
+		<!-- ENDIF optionalData.images.length -->
+		<!-- IF optionalData.dealUrl -->
+		<a href="{optionalData.dealUrl}" class="btn btn-info" target="_blank" id="optionalData-dealUrl">
+			[[thesiscustom:visit-now]]
+		</a>
+		<!-- ENDIF optionalData.dealUrl -->
+		<div class="text-center author">
+			<strong>
+				<a href="<!-- IF posts.user.userslug -->{config.relative_path}/user/{posts.user.userslug}<!-- ELSE -->#<!-- ENDIF posts.user.userslug -->" itemprop="author" data-username="{posts.user.username}" data-uid="{posts.user.uid}">{posts.user.username}</a>
+			</strong> [[thesiscustom:posted-deal]]
+		</div>
+	</div>
+	<!-- ENDIF posts.isMain -->
 </div>
 
 <div class="clearfix post-footer">
@@ -53,7 +74,6 @@
 	<div component="post/signature" data-uid="{posts.user.uid}" class="post-signature">{posts.user.signature}</div>
 	<!-- ENDIF posts.user.signature -->
 	<!-- IF posts.isMain -->
-	<!-- IMPORT partials/topic/topic-note.tpl -->
 	<!-- IMPORT partials/topic/votes-topic.tpl -->
 	<!-- ENDIF posts.isMain -->
 	<!-- IF !posts.isMain -->
@@ -87,5 +107,10 @@
 	<!-- ENDIF !posts.isMain -->
 	<!-- ENDIF !hideReplies -->
 </div>
-
-<hr />
+<!-- IF posts.isMain -->
+<div style="padding: 0px" class="col-md-8">
+	<hr/>
+</div>
+<!-- ELSE -->
+<hr/>
+<!-- ENDIF posts.isMain -->

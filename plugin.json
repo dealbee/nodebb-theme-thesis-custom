@@ -27,6 +27,7 @@
 		"lib/persona.js",
 		"lib/imageSlideshow.js",
 		"lib/topic_custom.js",
+		"lib/topic_style.js",
 		"lib/topic_countdown.js",
 		"lib/modules/nprogress.js",
 		"lib/modules/autohidingnavbar.min.js",

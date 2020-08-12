@@ -32,9 +32,6 @@
         </div>
 
         <h2 component="topic/header" class="title">
-            <i style="color: #4CAF50" component="topic/pinned"
-               class="fa fa-check-circle <!-- IF topics.deleted -->hide<!-- ENDIF topics.deleted --> <!-- IF topics.locked -->hide<!-- ENDIF topics.locked -->"
-               title="[[thesiscustom:approved]]"></i>
             <i component="topic/pinned"
                class="fa fa-thumb-tack hidden <!-- IF !topics.pinned -->hide<!-- ENDIF !topics.pinned -->"
                title="[[topic:pinned]]"></i>

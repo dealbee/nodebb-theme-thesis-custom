@@ -1,4 +1,4 @@
-<div class="votes votes-topic">
+<div class="votes votes-topic col-md-8">
     <div class="btn-group" role="group">
         <button component="post/upvote" type="button"
                 class="btn btn-default <!-- IF posts.upvoted -->upvoted<!-- ENDIF posts.upvoted -->">
@@ -21,13 +21,9 @@
         </button>
         <button class="btn btn-info disabled">{posts.postcount}</button>
     </div>
-    <div class="btn-group" role="group">
-        <button class="btn btn-default disabled"
-                component="post/reply">
-            <i class="fa fa-eye"></i>
-        </button>
-        <button class="btn btn-info disabled">{posts.viewcount}</button>
-    </div>
+    <span style="text-transform: lowercase">
+       {posts.viewcount} [[global:views]]
+    </span>
     <small class="pull-right" style="display: flex; justify-content: center;">
         <!-- IF posts.isMain -->
         <!-- IF !locked -->

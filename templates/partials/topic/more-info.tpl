@@ -24,19 +24,18 @@
     <div id="optionalData-coupon"><span class="optionalData-title">[[thesiscustom:coupon]]</span>: <span
                 class="optionalData-content"><i class="fa fa-tag"></i> <span>{optionalData.coupon}</span></span></div>
     <!-- ENDIF optionalData.coupon -->
+    <!-- IF optionalData.brand -->
+    <div id="optionalData-brand"><span class="optionalData-title">[[thesiscustom:brand]]</span>: <span
+                class="optionalData-content">{optionalData.brand}</span></div>
+    <!-- ENDIF optionalData.brand -->
+
+    <!-- IF optionalData.maxDiscount -->
+    <div id="optionalData-maxDiscount"><span class="optionalData-title">[[thesiscustom:max-discount-money]]</span>:
+        <span class="optionalData-content">{optionalData.maxDiscount} {optionalData.currency}</span></div>
+    <!-- ENDIF optionalData.maxDiscount -->
     <a data-toggle="collapse" data-target="#optionalData-collapse" title="[[thesiscustom:more]]"><i
-                class="fa fa-info-circle"></i></a>
+                class="fa fa-info-circle hidden"></i></a>
     <div id="optionalData-collapse" class="collapse">
-        <!-- IF optionalData.brand -->
-        <div id="optionalData-brand"><span class="optionalData-title">[[thesiscustom:brand]]</span>: <span
-                    class="optionalData-content">{optionalData.brand}</span></div>
-        <!-- ENDIF optionalData.brand -->
-
-        <!-- IF optionalData.maxDiscount -->
-        <div id="optionalData-maxDiscount"><span class="optionalData-title">[[thesiscustom:max-discount-money]]</span>:
-            <span class="optionalData-content">{optionalData.maxDiscount} {optionalData.currency}</span></div>
-        <!-- ENDIF optionalData.maxDiscount -->
-
         <!-- IF optionalData.amount -->
         <div id="optionalData-amount"><span class="optionalData-title">[[thesiscustom:amount]]</span>: <span
                     class="optionalData-content">{optionalData.amount}</span></div>

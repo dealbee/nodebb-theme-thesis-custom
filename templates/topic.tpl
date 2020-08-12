@@ -2,9 +2,8 @@
 <div class="row">
     <div class="col-xs-12">
         <h1 component="post/header" class="hidden-xs" itemprop="name">
-            <i style="color: #4CAF50" component="topic/pinned"
-               class="fa fa-check-circle <!-- IF locked -->hidden<!-- ENDIF locked --> <!-- IF deleted -->hidden<!-- ENDIF deleted -->"
-               title="[[thesiscustom:approved]]"></i>
+            <i style="color: #00b3ee" class="fa fa-star <!-- IF !isPinned --> hidden <!-- ENDIF !isPinned -->" title="[[thesiscustom:isPinned]]"></i>
+            </span>
             <i class="pull-left fa fa-thumb-tack hidden <!-- IF !pinned -->hidden<!-- ENDIF !pinned -->"
                title="[[topic:pinned]]"></i>
             <i style="color: #fda34b"
@@ -16,11 +15,13 @@
             {{{each icons}}}@value{{{end}}}
             <span class="topic-title" component="topic/title">
                 {title}
-            <i style="color: #00b3ee" class="fa fa-star <!-- IF !isPinned --> hidden <!-- ENDIF !isPinned -->" title="[[thesiscustom:isPinned]]"></i>
-            </span>
         </h1>
     </div>
-    <div class="col-xs-12 col-md-4" id="#optional-data">
+    <div class="col-xs-12">
+        <!-- IMPORT partials/topic/deleted-message.tpl -->
+        <!-- IMPORT partials/topic/disapproved_message.tpl -->
+    </div>
+    <div class="col-xs-12">
         <!-- IF optionalData.discountPrice -->
         <div class="row" id="optionalData-priceContainer">
             <div id="optionalData-price">{optionalData.price} {optionalData.currency}</div>
@@ -28,17 +29,8 @@
         </div>
         <!-- ENDIF optionalData.discountPrice -->
         <!-- IMPORT partials/topic/more-info.tpl -->
-
-        <!-- IF optionalData.images.length -->
-        <!-- IMPORT partials/topic/imageSlideshow.tpl -->
-        <!-- ENDIF optionalData.images.length -->
-        <!-- IF optionalData.dealUrl -->
-        <a href="{optionalData.dealUrl}" class="btn btn-info" target="_blank" id="optionalData-dealUrl">
-            [[thesiscustom:visit-now]]
-        </a>
-        <!-- ENDIF optionalData.dealUrl -->
     </div>
-    <div class="col-xs-12 col-md-8">
+    <div class="col-xs-12">
         <div class="topic <!-- IF widgets.sidebar.length -->col-lg-9 col-sm-12<!-- ELSE -->col-lg-12<!-- ENDIF widgets.sidebar.length -->">
             <!-- IF merger -->
             <div component="topic/merged/message" class="alert alert-warning clearfix">
@@ -51,33 +43,28 @@
 			</span>
             </div>
             <!-- ENDIF merger -->
-
-            <!-- IMPORT partials/topic/deleted-message.tpl -->
-            <!-- IMPORT partials/topic/disapproved_message.tpl -->
             <hr class="visible-xs"/>
-
-            <ul component="topic" class="posts" data-tid="{tid}" data-cid="{cid}">
-                <!-- BEGIN posts -->
-                <li component="post" class="<!-- IF posts.deleted -->
+                <ul component="topic" class="posts" data-tid="{tid}" data-cid="{cid}">
+                    <!-- BEGIN posts -->
+                    <li component="post" class="<!-- IF posts.deleted -->
                                             deleted
                                             <!-- ENDIF posts.deleted -->
                                             <!-- IF !posts.isMain -->
-                                            topic-comment
+                                            topic-comment col-md-8
                                             <!-- ENDIF !posts.isMain -->"
-                <!-- IMPORT partials/data/topic.tpl -->>
-                <a component="post/anchor" data-index="{posts.index}" id="{posts.index}"></a>
+                    <!-- IMPORT partials/data/topic.tpl -->>
+                    <a component="post/anchor" data-index="{posts.index}" id="{posts.index}"></a>
 
-                <meta itemprop="datePublished" content="{posts.timestampISO}">
-                <meta itemprop="dateModified" content="{posts.editedISO}">
+                    <meta itemprop="datePublished" content="{posts.timestampISO}">
+                    <meta itemprop="dateModified" content="{posts.editedISO}">
 
-                <!-- IMPORT partials/topic/post.tpl -->
-                <!-- IF !posts.index -->
-                <div class="post-bar-placeholder"></div>
-                <!-- ENDIF !posts.index -->
-                </li>
-                <!-- END posts -->
-            </ul>
-
+                    <!-- IMPORT partials/topic/post.tpl -->
+                    <!-- IF !posts.index -->
+                    <div class="post-bar-placeholder"></div>
+                    <!-- ENDIF !posts.index -->
+                    </li>
+                    <!-- END posts -->
+                </ul>
             <!-- IF config.enableQuickReply -->
             <!-- IMPORT partials/topic/quickreply.tpl -->
             <!-- ENDIF config.enableQuickReply -->
